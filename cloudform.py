@@ -8,7 +8,6 @@
 
 from troposphere import Base64, FindInMap, GetAtt, Join
 from troposphere import Parameter, Output, Ref, Template
-#import troposphere.ec2 as ec2
 from troposphere.ec2 import PortRange, NetworkAcl, Route, \
     VPCGatewayAttachment, SubnetRouteTableAssociation, Subnet, RouteTable, \
     VPC, NetworkInterfaceProperty, NetworkAclEntry, \
@@ -16,29 +15,69 @@ from troposphere.ec2 import PortRange, NetworkAcl, Route, \
     SecurityGroupRule, SecurityGroup, DHCPOptions, VPCDHCPOptionsAssociation, \
     VPCGatewayAttachment
 from troposphere.sns import Topic
+import argparse
+import sys
+
 
 template = Template()
 
 #print("*** Creating CloudFormation template ***")
 
-environments = ["test","dev","uat","prod"]
+arg = argparse.ArgumentParser()
 
-#env, required
+arg.add_argument(
+                "-e",
+                "--environment", 
+                help="Deployment environment")
+args = arg.parse_args()
+
+env = args.environment.capitalize()
+environments = ["Test","Dev","Uat","Prod"]
+# default = environments[1] # As an alternative to exit we could use default.
+
+#build "development"
+#revision "develop"
+
+if env in environments:
+    print("Using environment {e}.".format(e=env))
+    envl = args.environment.lower()
+
+    
+    build = env
+    revision = env
+
+else:
+    print("Invalid environment, exiting. Please use any of these: {envs}".format(envs=environments))
+    sys.exit()
+
+
+def getBuildAndRevision(e):
+   "Gets the environment name, then decides and returns build and revision names"
+   buildRev = []
+   if e == "Test":
+    buildRev = ["test","test"]
+   elif e == "Dev":
+    buildRev = ["development","develop"]
+   elif e == "Uat":
+    buildRev = ["uat","uat"]
+   elif e == "Prod":
+    buildRev = ["production","prod"]
+   return buildRev
 
 
 # Description
 template.add_description("Service VPC - used for services")
 template.add_metadata(
 		{
-			"Build":"development", 
+			"Build": getBuildAndRevision(env)[0], 
 			"DependsOn": [],
-		    "Environment": "ApiDev",
-	        "Revision": "develop",
-	        "StackName": "ApiDev-Dev-VPC",
+		    "Environment": "Api{e}".format(e=env),
+	        "Revision": getBuildAndRevision(env)[1],
+	        "StackName": "Api{e}-{e}-VPC".format(e=env),
 	        "StackType": "InfrastructureResource",
-	        "TemplateBucket": "cfn-apidev",
+	        "TemplateBucket": "cfn-api{el}".format(el=envl),
 	        "TemplateName": "VPC",
-	        "TemplatePath": "ApiDev/Dev/VPC"
+	        "TemplatePath": "Api{e}/{e}/VPC".format(e=env)
         }
 )
 
@@ -80,11 +119,11 @@ bastion_sg = SecurityGroup(
 	GroupDescription="Used for source/dest rules",
 	Tags=[{
     	"Key": "Environment",
-        "Value": "ApiDev"
+        "Value": "Api{e}".format(e=env)
     },
     {
         "Key": "Name",
-        "Value": "ApiDev-Dev-VPC-Bastion-SG"
+        "Value": "Api{e}-{e}-VPC-Bastion-SG".format(e=env)
     },
     {
         "Key": "Owner",
@@ -96,7 +135,7 @@ bastion_sg = SecurityGroup(
     },
     {
         "Key": "VPC",
-        "Value": "Dev"
+        "Value": env
     }],
     VpcId=Ref("VPC")
 )
@@ -104,7 +143,7 @@ template.add_resource(bastion_sg)
 
 cloud_watch_alarm_topic = Topic(
 	"CloudWatchAlarmTopic",
-	TopicName="ApiDev-Dev-CloudWatchAlarms"
+	TopicName="Api{e}-{e}-CloudWatchAlarms".format(e=env)
 )
 template.add_resource(cloud_watch_alarm_topic)
 
@@ -114,11 +153,11 @@ dhcp_options = DHCPOptions(
     DomainNameServers=["AmazonProvidedDNS"],
     Tags=[{
         "Key": "Environment",
-        "Value": "ApiDev"
+        "Value": "Api{e}".format(e=env)
     },
     {
         "Key": "Name",
-        "Value": "ApiDev-Dev-DhcpOptions"
+        "Value": "Api{e}-{e}-DhcpOptions".format(e=env)
     },
     {
         "Key": "Owner",
@@ -130,7 +169,7 @@ dhcp_options = DHCPOptions(
     },
     {
         "Key": "VPC",
-        "Value": "Dev"
+        "Value": env
     }]
 )
 template.add_resource(dhcp_options)
@@ -139,11 +178,11 @@ internet_gateway = InternetGateway(
     "InternetGateway",
     Tags=[{
         "Key": "Environment",
-        "Value": "ApiDev"
+        "Value": "Api{e}".format(e=env)
     },
     {
         "Key": "Name",
-        "Value": "ApiDev-Dev-InternetGateway"
+        "Value": "Api{e}-{e}-InternetGateway".format(e=env)
     },
     {
         "Key": "Owner",
@@ -155,14 +194,14 @@ internet_gateway = InternetGateway(
     },
     {
         "Key": "VPC",
-        "Value": "Dev"
+        "Value": env
     }]
 )
 template.add_resource(internet_gateway)
 
 nat_emergency_topic = Topic(
     "NatEmergencyTopic",
-    TopicName="ApiDev-Dev-NatEmergencyTopic"
+    TopicName="Api{e}-{e}-NatEmergencyTopic".format(e=env)
 )
 template.add_resource(nat_emergency_topic)
 
@@ -174,11 +213,11 @@ vpc = VPC(
     InstanceTenancy="default",
     Tags=[{
         "Key": "Environment",
-        "Value": "ApiDev"
+        "Value": "Api{e}".format(e=env)
     },
     {
         "Key": "Name",
-        "Value": "ApiDev-Dev-ServiceVPC"
+        "Value": "Api{e}-{e}-ServiceVPC".format(e=env)
     },
     {
         "Key": "Owner",
@@ -190,7 +229,7 @@ vpc = VPC(
     },
     {
         "Key": "VPC",
-        "Value": "Dev"
+        "Value": env
     }]
     )
 template.add_resource(vpc)
@@ -213,11 +252,11 @@ network_acl = NetworkAcl(
     "VpcNetworkAcl",
     Tags=[{
         "Key": "Environment",
-        "Value": "ApiDev"
+        "Value": "Api{e}".format(e=env)
     },
     {
         "Key": "Name",
-        "Value": "ApiDev-Dev-NetworkAcl"
+        "Value": "Api{e}-{e}-NetworkAcl".format(e=env)
     },
     {
         "Key": "Owner",
@@ -229,7 +268,7 @@ network_acl = NetworkAcl(
     },
     {
         "Key": "VPC",
-        "Value": "Dev"
+        "Value": env
     }],
     VpcId=Ref("VPC")
 )
@@ -282,8 +321,16 @@ network_ssh_acl_entry = NetworkAclEntry(
 )
 template.add_resource(network_ssh_acl_entry)
 
+template_output = template.to_json()
+output_filename = "out-{e}.json".format(e=env)
+output_dir = "output/"
+
+print(template_output)
+
+file = open(output_dir + output_filename, "w") 
+file.write(template_output)
+file.close()
 
 
 
 
-print(template.to_json())

@@ -1,15 +1,15 @@
 {
     "Description": "Service VPC - used for services",
     "Metadata": {
-        "Build": "development",
+        "Build": "uat",
         "DependsOn": [],
-        "Environment": "ApiDev",
-        "Revision": "develop",
-        "StackName": "ApiDev-Dev-VPC",
+        "Environment": "ApiUat",
+        "Revision": "uat",
+        "StackName": "ApiUat-Uat-VPC",
         "StackType": "InfrastructureResource",
-        "TemplateBucket": "cfn-apidev",
+        "TemplateBucket": "cfn-apiuat",
         "TemplateName": "VPC",
-        "TemplatePath": "ApiDev/Dev/VPC"
+        "TemplatePath": "ApiUat/Uat/VPC"
     },
     "Outputs": {
         "BastionSG": {
@@ -55,11 +55,11 @@
                 "Tags": [
                     {
                         "Key": "Environment",
-                        "Value": "ApiDev"
+                        "Value": "ApiUat"
                     },
                     {
                         "Key": "Name",
-                        "Value": "ApiDev-Dev-VPC-Bastion-SG"
+                        "Value": "ApiUat-Uat-VPC-Bastion-SG"
                     },
                     {
                         "Key": "Owner",
@@ -71,7 +71,7 @@
                     },
                     {
                         "Key": "VPC",
-                        "Value": "Dev"
+                        "Value": "Uat"
                     }
                 ],
                 "VpcId": {
@@ -82,7 +82,7 @@
         },
         "CloudWatchAlarmTopic": {
             "Properties": {
-                "TopicName": "ApiDev-Dev-CloudWatchAlarms"
+                "TopicName": "ApiUat-Uat-CloudWatchAlarms"
             },
             "Type": "AWS::SNS::Topic"
         },
@@ -105,11 +105,11 @@
                 "Tags": [
                     {
                         "Key": "Environment",
-                        "Value": "ApiDev"
+                        "Value": "ApiUat"
                     },
                     {
                         "Key": "Name",
-                        "Value": "ApiDev-Dev-DhcpOptions"
+                        "Value": "ApiUat-Uat-DhcpOptions"
                     },
                     {
                         "Key": "Owner",
@@ -121,7 +121,7 @@
                     },
                     {
                         "Key": "VPC",
-                        "Value": "Dev"
+                        "Value": "Uat"
                     }
                 ]
             },
@@ -132,11 +132,11 @@
                 "Tags": [
                     {
                         "Key": "Environment",
-                        "Value": "ApiDev"
+                        "Value": "ApiUat"
                     },
                     {
                         "Key": "Name",
-                        "Value": "ApiDev-Dev-InternetGateway"
+                        "Value": "ApiUat-Uat-InternetGateway"
                     },
                     {
                         "Key": "Owner",
@@ -148,7 +148,7 @@
                     },
                     {
                         "Key": "VPC",
-                        "Value": "Dev"
+                        "Value": "Uat"
                     }
                 ]
             },
@@ -156,7 +156,7 @@
         },
         "NatEmergencyTopic": {
             "Properties": {
-                "TopicName": "ApiDev-Dev-NatEmergencyTopic"
+                "TopicName": "ApiUat-Uat-NatEmergencyTopic"
             },
             "Type": "AWS::SNS::Topic"
         },
@@ -169,11 +169,11 @@
                 "Tags": [
                     {
                         "Key": "Environment",
-                        "Value": "ApiDev"
+                        "Value": "ApiUat"
                     },
                     {
                         "Key": "Name",
-                        "Value": "ApiDev-Dev-ServiceVPC"
+                        "Value": "ApiUat-Uat-ServiceVPC"
                     },
                     {
                         "Key": "Owner",
@@ -185,7 +185,7 @@
                     },
                     {
                         "Key": "VPC",
-                        "Value": "Dev"
+                        "Value": "Uat"
                     }
                 ]
             },
@@ -218,11 +218,11 @@
                 "Tags": [
                     {
                         "Key": "Environment",
-                        "Value": "ApiDev"
+                        "Value": "ApiUat"
                     },
                     {
                         "Key": "Name",
-                        "Value": "ApiDev-Dev-NetworkAcl"
+                        "Value": "ApiUat-Uat-NetworkAcl"
                     },
                     {
                         "Key": "Owner",
@@ -234,7 +234,7 @@
                     },
                     {
                         "Key": "VPC",
-                        "Value": "Dev"
+                        "Value": "Uat"
                     }
                 ],
                 "VpcId": {
