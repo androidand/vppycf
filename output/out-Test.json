@@ -1,15 +1,15 @@
 {
     "Description": "Service VPC - used for services",
     "Metadata": {
-        "Build": "uat",
+        "Build": "test",
         "DependsOn": [],
-        "Environment": "ApiUat",
-        "Revision": "uat",
-        "StackName": "ApiUat-Uat-VPC",
+        "Environment": "ApiTest",
+        "Revision": "test",
+        "StackName": "ApiTest-Test-VPC",
         "StackType": "InfrastructureResource",
-        "TemplateBucket": "cfn-apiuat",
+        "TemplateBucket": "cfn-apitest",
         "TemplateName": "VPC",
-        "TemplatePath": "ApiUat/Uat/VPC"
+        "TemplatePath": "ApiTest/Test/VPC"
     },
     "Outputs": {
         "BastionSG": {
@@ -55,11 +55,11 @@
                 "Tags": [
                     {
                         "Key": "Environment",
-                        "Value": "ApiUat"
+                        "Value": "ApiTest"
                     },
                     {
                         "Key": "Name",
-                        "Value": "ApiUat-Uat-VPC-Bastion-SG"
+                        "Value": "ApiTest-Test-VPC-Bastion-SG"
                     },
                     {
                         "Key": "Owner",
@@ -71,7 +71,7 @@
                     },
                     {
                         "Key": "VPC",
-                        "Value": "Uat"
+                        "Value": "Test"
                     }
                 ],
                 "VpcId": {
@@ -82,7 +82,7 @@
         },
         "CloudWatchAlarmTopic": {
             "Properties": {
-                "TopicName": "ApiUat-Uat-CloudWatchAlarms"
+                "TopicName": "ApiTest-Test-CloudWatchAlarms"
             },
             "Type": "AWS::SNS::Topic"
         },
@@ -105,11 +105,11 @@
                 "Tags": [
                     {
                         "Key": "Environment",
-                        "Value": "ApiUat"
+                        "Value": "ApiTest"
                     },
                     {
                         "Key": "Name",
-                        "Value": "ApiUat-Uat-DhcpOptions"
+                        "Value": "ApiTest-Test-DhcpOptions"
                     },
                     {
                         "Key": "Owner",
@@ -121,7 +121,7 @@
                     },
                     {
                         "Key": "VPC",
-                        "Value": "Uat"
+                        "Value": "Test"
                     }
                 ]
             },
@@ -132,11 +132,11 @@
                 "Tags": [
                     {
                         "Key": "Environment",
-                        "Value": "ApiUat"
+                        "Value": "ApiTest"
                     },
                     {
                         "Key": "Name",
-                        "Value": "ApiUat-Uat-InternetGateway"
+                        "Value": "ApiTest-Test-InternetGateway"
                     },
                     {
                         "Key": "Owner",
@@ -148,7 +148,7 @@
                     },
                     {
                         "Key": "VPC",
-                        "Value": "Uat"
+                        "Value": "Test"
                     }
                 ]
             },
@@ -156,7 +156,7 @@
         },
         "NatEmergencyTopic": {
             "Properties": {
-                "TopicName": "ApiUat-Uat-NatEmergencyTopic"
+                "TopicName": "ApiTest-Test-NatEmergencyTopic"
             },
             "Type": "AWS::SNS::Topic"
         },
@@ -169,11 +169,11 @@
                 "Tags": [
                     {
                         "Key": "Environment",
-                        "Value": "ApiUat"
+                        "Value": "ApiTest"
                     },
                     {
                         "Key": "Name",
-                        "Value": "ApiUat-Uat-ServiceVPC"
+                        "Value": "ApiTest-Test-ServiceVPC"
                     },
                     {
                         "Key": "Owner",
@@ -185,7 +185,7 @@
                     },
                     {
                         "Key": "VPC",
-                        "Value": "Uat"
+                        "Value": "Test"
                     }
                 ]
             },
@@ -218,11 +218,11 @@
                 "Tags": [
                     {
                         "Key": "Environment",
-                        "Value": "ApiUat"
+                        "Value": "ApiTest"
                     },
                     {
                         "Key": "Name",
-                        "Value": "ApiUat-Uat-NetworkAcl"
+                        "Value": "ApiTest-Test-NetworkAcl"
                     },
                     {
                         "Key": "Owner",
@@ -234,7 +234,7 @@
                     },
                     {
                         "Key": "VPC",
-                        "Value": "Uat"
+                        "Value": "Test"
                     }
                 ],
                 "VpcId": {

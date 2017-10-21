@@ -17,7 +17,7 @@ from troposphere.ec2 import PortRange, NetworkAcl, Route, \
 from troposphere.sns import Topic
 import argparse
 import sys
-
+import helpers as h
 
 template = Template()
 
@@ -28,7 +28,13 @@ arg = argparse.ArgumentParser()
 arg.add_argument(
                 "-e",
                 "--environment", 
+                required=True,
                 help="Deployment environment")
+arg.add_argument(
+                "-w",
+                "--write",
+                action='store_true',
+                help="Write to file. If not specified, output is printed to console.")
 args = arg.parse_args()
 
 env = args.environment.capitalize()
@@ -51,28 +57,14 @@ else:
     sys.exit()
 
 
-def getBuildAndRevision(e):
-   "Gets the environment name, then decides and returns build and revision names"
-   buildRev = []
-   if e == "Test":
-    buildRev = ["test","test"]
-   elif e == "Dev":
-    buildRev = ["development","develop"]
-   elif e == "Uat":
-    buildRev = ["uat","uat"]
-   elif e == "Prod":
-    buildRev = ["production","prod"]
-   return buildRev
-
-
 # Description
 template.add_description("Service VPC - used for services")
 template.add_metadata(
 		{
-			"Build": getBuildAndRevision(env)[0], 
+			"Build": h.getBuildAndRevision(env)[0], 
 			"DependsOn": [],
 		    "Environment": "Api{e}".format(e=env),
-	        "Revision": getBuildAndRevision(env)[1],
+	        "Revision": h.getBuildAndRevision(env)[1],
 	        "StackName": "Api{e}-{e}-VPC".format(e=env),
 	        "StackType": "InfrastructureResource",
 	        "TemplateBucket": "cfn-api{el}".format(el=envl),
@@ -325,11 +317,14 @@ template_output = template.to_json()
 output_filename = "out-{e}.json".format(e=env)
 output_dir = "output/"
 
-print(template_output)
 
-file = open(output_dir + output_filename, "w") 
-file.write(template_output)
-file.close()
+if args.write:
+    file = open(output_dir + output_filename, "w") 
+    file.write(template_output)
+    file.close()
+
+else:
+    print(template_output)
 
 
 
